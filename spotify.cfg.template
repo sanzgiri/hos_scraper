@@ -1,0 +1,6 @@
+[spotify]
+# no quotes in config params below
+username=xxx
+client_id=yyy
+client_secret=zzz
+redirect_uri=https://localhost:8888/callback/
