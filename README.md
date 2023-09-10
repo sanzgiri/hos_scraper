@@ -41,6 +41,3 @@ This repo contains code that generates a Spotify playlist from the tracks in a H
    and <csvfile> is a file that has a list of song titles from the artist, one per line, with a header called "Song". These titles could be scraped, say from Wikipedia. 
    Creates a playlist called "APS Best of <artist name>
    There will likely be many duplicates and occassional songs from artists with similar names :-) 
-
-
-
