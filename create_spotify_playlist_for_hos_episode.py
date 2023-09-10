@@ -22,7 +22,9 @@ os.environ['SPOTIPY_CLIENT_SECRET'] = configParser.get('spotify', 'client_secret
 os.environ['SPOTIPY_REDIRECT_URI'] = configParser.get('spotify', 'redirect_uri')
 
 username = configParser.get('spotify', 'username')
-scope = 'playlist-modify-public'
+scope = ['playlist-modify-public', 'user-read-currently-playing',
+         'user-read-recently-played', 'user-read-playback-state',
+         'user-modify-playback-state']
 overwrite = 1
 
 def get_hos_playlist(episode_id: int):
@@ -41,6 +43,7 @@ def get_hos_playlist(episode_id: int):
 
     if response.status_code == 200:
         x = response.json()
+        pgm_name = x['title']
         description = f"Title: {x['title']}, Short Description: {x['shortDescription']}, Genre: {x['genres'][0]['name']}, Description: {x['description']}"
         nsongs = len(x['albums'])
         for i in range(nsongs):
@@ -55,7 +58,7 @@ def get_hos_playlist(episode_id: int):
     else:
         print(f"Failed getting playlist for episode {episode_id}")
 
-    return df, description
+    return df, pgm_name, description
 
 
 def create_playlist(username: str, plname: str, description: str, overwrite: int):
@@ -96,18 +99,16 @@ def create_playlist(username: str, plname: str, description: str, overwrite: int
 
 if __name__ == '__main__':
 
-    #episode_id = sys.argv[1]
-    episode_id = 1231
+    episode_id = sys.argv[1]
     token = util.prompt_for_user_token(username, scope)
-    #from spotipy.oauth2 import SpotifyClientCredentials
-
-    #client_credentials_manager = SpotifyClientCredentials()
-    #sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+    print(token)
 
     sp = spotipy.Spotify(auth=token)
-    df_hos, description = get_hos_playlist(episode_id)
+    df_hos, title, description = get_hos_playlist(episode_id)
+    print(title)
 
-    pl_name = f'hos_{episode_id}'
+    pl_name = f'HOS_{episode_id}: {title}'
+    #pl_name = f'HOS_{episode_id}'
     pl_id = create_playlist(username, pl_name, description, overwrite)
 
     if (~df_hos.empty):
@@ -126,9 +127,11 @@ if __name__ == '__main__':
             items = results['tracks']['items']
             if len(items) > 0:
                 id = items[0]['id']
+                if (id not in tracklist):
+                    tracklist.append(id)
+                    print(f"{query}: found {len(items)} {items[0]['name']}")
+                    npassed += 1
                 tracklist.append(id)
-                print(f"{query}: found")
-                npassed += 1
             else:
                 print(f"{query}: not found")
 
