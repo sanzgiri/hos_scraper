@@ -2,5 +2,9 @@
 .cache
 .cache-sanzgiri
 spotify.cfg
+.spotify_token_cache
+.venv/
+__pycache__/
+*.pyc
 .DS_store
 *.csv

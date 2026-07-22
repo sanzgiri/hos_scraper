@@ -46,7 +46,7 @@ def get_artist(name):
 
 def create_playlist(username: str, plname: str, description: str, overwrite: int):
 
-    sp = spotipy.Spotify(auth=token)
+    sp = spotipy.Spotify(auth=token, requests_timeout=20, retries=5)
     playlist_id = 0
     playlists = sp.user_playlists(username)
     # multi-line description does not work, leave it empty for now
@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
     df = pd.read_csv(csvfile, encoding='utf-8')
     token = util.prompt_for_user_token(username, scope)
-    sp = spotipy.Spotify(auth=token)
+    sp = spotipy.Spotify(auth=token, requests_timeout=20, retries=5)
 
     pl_name = f'APS - Hindi songs of {artist}'
     description = f'APS - Hindi songs of {artist}'

@@ -1,3 +1,4 @@
 spotipy
-urllib3
-bs4
+requests
+beautifulsoup4
+urllib3<2

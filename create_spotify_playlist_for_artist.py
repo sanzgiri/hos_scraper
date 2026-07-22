@@ -37,7 +37,7 @@ def get_artist(name):
 
 def create_playlist(username: str, plname: str, description: str, overwrite: int):
 
-    sp = spotipy.Spotify(auth=token)
+    sp = spotipy.Spotify(auth=token, requests_timeout=20, retries=5)
     playlist_id = 0
     playlists = sp.user_playlists(username)
     # multi-line description does not work, leave it empty for now
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     artist = sys.argv[1]
     token = util.prompt_for_user_token(username, scope)
 
-    sp = spotipy.Spotify(auth=token)
+    sp = spotipy.Spotify(auth=token, requests_timeout=20, retries=5)
     urn = get_artist(artist)['uri']
     print(urn)
     if not urn:
